@@ -22,4 +22,4 @@ Examples:
 **Best Reflection** "I learned when to use while vs for loops. While loops are for sentiel-controlled values (waiting for a condition to occur), vs for loops are for iterating over collections of fixed values."
 
 `--- Reflection Below This Line ---`
-
+I learned how to create my own data pipeline, from getting data from an API, to manipulating the data using Pandas, to creating functions and visualizations, to putting it all together into a streamlit. I used an NBA API to gather player statistics data, as well as shot data, and used this data to create a streamlit dashboard showing stats for both players and teams, with per-game stats, shot charts, and hot/cold zones. The hardest thing to make was definitely the hot/cold zones graph, as it took a lot of searching through the MatPlotLib documentation to find what I wanted to do.
