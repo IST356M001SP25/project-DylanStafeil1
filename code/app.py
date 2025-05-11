@@ -9,6 +9,8 @@ from functions import (
     plot_player_hotzones,
     plot_team_hotzones,
     get_league_zone_averages,
+    plot_team_shot_density,
+    plot_player_shot_density
 )
 # Load datasets once to get dropdown options
 player_stats = pd.read_csv('cache/NBA_2024_25_PlayerStats.csv')
@@ -52,8 +54,19 @@ with tab1:
     team_stats = get_team_stats(selected_team)
     st.dataframe(team_stats.reset_index(drop=True), use_container_width=True)
     
-    st.subheader("Shot Chart")
-    plot_team_shot_chart(selected_team)
+    st.subheader("Shot Charts")
+    chart_type_team = st.radio(
+    "Select Shot Chart Type:", 
+    ["Make/Miss Chart", "Density Chart"], 
+    horizontal=True, 
+    key="team_chart_type"
+)
+
+    if chart_type_team == "Make/Miss Chart":
+        plot_team_shot_chart(selected_team)
+    else:
+        st.subheader("NOTE: Density chart takes ~1 minute to load")
+        plot_team_shot_density(selected_team)
 
     st.subheader("Hot/Cold Zones")
     plot_team_hotzones(selected_team, shot_data, LEAGUE_AVG_BY_ZONE)
@@ -68,8 +81,18 @@ with tab2:
     player_stats = get_player_stats(selected_player)
     st.dataframe(player_stats.reset_index(drop=True), use_container_width=True)
 
-    st.subheader("Shot Chart")
-    plot_player_shot_chart(selected_player)
+    st.subheader("Shot Charts")
+    chart_type_player = st.radio(
+    "Select Shot Chart Type:", 
+    ["Make/Miss Chart", "Density Chart"], 
+    horizontal=True, 
+    key="player_chart_type")
+
+    if chart_type_player == "Make/Miss Chart":
+        plot_player_shot_chart(selected_player)
+    else:
+        st.subheader("NOTE: Density chart takes ~15 seconds to load")
+        plot_player_shot_density(selected_player)
 
     st.subheader("Hot/Cold Zones")
     plot_player_hotzones(selected_player, shot_data, LEAGUE_AVG_BY_ZONE)

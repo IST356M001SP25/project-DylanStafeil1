@@ -4,6 +4,8 @@ from matplotlib.patches import Circle, Rectangle, Arc
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import pandas as pd
+import seaborn as sns
+
 
 # Load both datasets from the cache
 player_stats = pd.read_csv('cache/NBA_2024_25_PlayerStats.csv')
@@ -120,6 +122,65 @@ def plot_team_shot_chart(team_name):
     ax.set_ylim(-47.5, 470)
     st.pyplot(fig)
 
+#Plot team shot density
+def plot_team_shot_density(team_name):
+    shots = shot_data[shot_data['TEAM_NAME'].str.lower().str.contains(team_name.lower())]
+
+    if shots.empty:
+        st.warning("No shot data found for that team.")
+        return
+
+    fig, ax = plt.subplots(figsize=(12, 11))
+    draw_court(ax)
+    ax.set_title(f"{team_name} Shot Density (2024-25)", fontsize=16)
+
+    sns.kdeplot(
+        x=shots['LOC_X'],
+        y=shots['LOC_Y'],
+        fill=True,
+        cmap="inferno",
+        thresh=0.05,
+        levels=100,
+        alpha=0.8,
+        ax=ax
+    )
+
+    ax.set_xlim(-250, 250)
+    ax.set_ylim(-47.5, 470)
+    ax.axis('off')
+
+    st.pyplot(fig)
+
+#Plot player shot density
+
+def plot_player_shot_density(player_name):
+    shots = shot_data[shot_data['PLAYER_NAME'].str.lower() == player_name.lower()]
+    
+    if shots.empty:
+        st.warning("No shot data found for that player.")
+        return
+
+    fig, ax = plt.subplots(figsize=(12, 11))
+    draw_court(ax)
+    ax.set_title(f"{player_name} Shot Density (2024-25)", fontsize=16)
+
+    sns.kdeplot(
+        x=shots['LOC_X'],
+        y=shots['LOC_Y'],
+        fill=True,
+        cmap="inferno",
+        thresh=0.05,
+        levels=100, 
+        alpha=0.8,
+        ax=ax
+    )
+
+    ax.set_xlim(-250, 250)
+    ax.set_ylim(-47.5, 470)
+    ax.axis('off')
+
+    st.pyplot(fig)
+
 # Define court zones
 ZONES = {
     "Restricted Area": ((-80, 80), (-47.5, 60)),
@@ -182,7 +243,7 @@ def plot_player_hotzones(player_name, df, league_avgs):
     ax.set_ylim(-47.5, 470)
     ax.set_aspect('equal')
     ax.axis('off')
-    ax.set_title(f"{player_name} Hot Zones (vs. League Avg)", fontsize=16)
+    ax.set_title(f"{player_name} Hot Zones (Colored vs. League Avg)", fontsize=16)
 
     draw_court(ax)
 
@@ -213,7 +274,7 @@ def plot_team_hotzones(team_name, df, league_avgs):
     ax.set_ylim(-47.5, 470)
     ax.set_aspect('equal')
     ax.axis('off')
-    ax.set_title(f"{team_name} Hot Zones (vs. League Avg)", fontsize=16)
+    ax.set_title(f"{team_name} Hot Zones (Colored vs. League Avg)", fontsize=16)
 
     draw_court(ax)
 
